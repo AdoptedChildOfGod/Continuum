@@ -12,29 +12,40 @@ class PostListTableViewController: UITableViewController {
     
     // MARK: - Outlets
     
+    @IBOutlet weak var postSearchBar: UISearchBar!
+    
+    // MARK: - Properties
+    
+    var filteredPosts: [Post] = []
+    var isSearching = false
+    var dataSource: [Post] {
+        return isSearching ? filteredPosts : PostController.shared.posts
+    }
     
     // MARK: - Lifecycle Methods
 
     override func viewDidLoad() {
         super.viewDidLoad()
 
+        postSearchBar.delegate = self
     }
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(true)
+        filteredPosts = PostController.shared.posts
         tableView.reloadData()
     }
 
     // MARK: - Table view data source
 
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return PostController.shared.posts.count
+        return dataSource.count
     }
 
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         guard let cell = tableView.dequeueReusableCell(withIdentifier: "postCell", for: indexPath) as? PostTableViewCell else { return UITableViewCell() }
         
-        cell.post = PostController.shared.posts[indexPath.row]
+        cell.post = dataSource[indexPath.row]
 
         return cell
     }
@@ -71,5 +82,34 @@ class PostListTableViewController: UITableViewController {
             destinationVC.post = PostController.shared.posts[indexPath.row]
         }
 
+    }
+}
+
+// MARK: - Search Bar Delegate
+
+extension PostListTableViewController: UISearchBarDelegate {
+    
+    func searchBarTextDidBeginEditing(_ searchBar: UISearchBar) {
+        isSearching = true
+    }
+    
+    func searchBarTextDidEndEditing(_ searchBar: UISearchBar) {
+        isSearching = false
+    }
+    
+    func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
+        // Search for the search term
+        filteredPosts = PostController.shared.posts.filter { $0.search(for: searchText) }
+        
+        // Update the UI
+        tableView.reloadData()
+    }
+    
+    func searchBarCancelButtonClicked(_ searchBar: UISearchBar) {
+        filteredPosts = PostController.shared.posts
+        
+        // Update the UI
+        searchBar.text = nil
+        tableView.reloadData()
     }
 }

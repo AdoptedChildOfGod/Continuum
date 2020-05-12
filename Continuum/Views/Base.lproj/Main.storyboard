@@ -228,6 +228,9 @@
                         </connections>
                     </tableView>
                     <navigationItem key="navigationItem" title="All Posts" id="NaI-D0-3sh"/>
+                    <connections>
+                        <outlet property="postSearchBar" destination="Krb-fx-WVL" id="Klb-tf-2Rs"/>
+                    </connections>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="miF-S9-bCG" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>

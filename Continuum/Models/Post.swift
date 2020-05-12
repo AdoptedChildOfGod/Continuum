@@ -20,6 +20,12 @@ struct PostStrings {
     static let photoDataKey = "photoData"
 }
 
+// MARK: - Searchable Protocol
+
+protocol SearchableRecord {
+    func search(for searchterm: String) -> Bool
+}
+
 // MARK: - Post Object
 
 class Post {
@@ -47,6 +53,21 @@ class Post {
         self.timestamp = timestamp
         self.comments = comments
         self.photo = photo
+    }
+}
+
+// MARK: - Searchable Extension
+
+extension Post: SearchableRecord {
+    
+    func search(for searchterm: String) -> Bool {
+        // Search in the caption
+        if caption.contains(searchterm) { return true }
+        
+        // Search in the comments
+        if comments.filter({ $0.text.contains(searchterm) }).count > 0 { return true}
+        
+        return false
     }
 }
 
