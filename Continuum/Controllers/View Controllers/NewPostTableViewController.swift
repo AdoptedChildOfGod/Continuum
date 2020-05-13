@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import Photos
 
 class NewPostTableViewController: UITableViewController {
     
@@ -52,9 +53,11 @@ class NewPostTableViewController: UITableViewController {
         }
         
         // Create a new post
-        PostController.shared.createPost(with: photo, caption: caption) { (result) in
+        PostController.shared.createPost(with: photo, caption: caption) { [weak self] (result) in
             switch result {
             case .success(_):
+                // Save the photo to a custom album in the user's photo library
+                self?.addPhotoToContiuumAlbum()
                 print("Successfully created new post")
             case .failure(let error):
                 print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")
@@ -100,4 +103,50 @@ extension NewPostTableViewController: PhotoChooserViewControllerDelegate {
     func photoChooserViewControllerSelected(photo: UIImage) {
         self.photo = photo
     }
+}
+
+// MARK: - Custom Photo Album
+
+extension NewPostTableViewController: PHPhotoLibraryChangeObserver {
+    
+  func photoLibraryDidChange(_ changeInstance: PHChange) {
+    print("Photo Library did Change")
+  }
+  
+  func createContinuumAlbum(completion: @escaping (Bool) -> Void) {
+    PHPhotoLibrary.shared().register(self)
+    PHPhotoLibrary.shared().performChanges({
+      PHAssetCollectionChangeRequest.creationRequestForAssetCollection(withTitle: "Continuum")
+    }, completionHandler: { success, error in
+      completion(success)
+      if !success { print("Error creating album: \(String(describing: error)).") }
+    })
+  }
+  
+  func insert(photo: UIImage, in collection: PHAssetCollection) {
+    PHPhotoLibrary.shared().performChanges({
+      let creationRequest = PHAssetChangeRequest.creationRequestForAsset(from: photo)
+      let addAssetRequest = PHAssetCollectionChangeRequest(for: collection)
+      addAssetRequest?.addAssets([creationRequest.placeholderForCreatedAsset!] as NSArray)
+    }, completionHandler: nil)
+  }
+  
+  func fetchContinuumAlbum() ->  PHAssetCollection? {
+    let fetchOptions = PHFetchOptions()
+    fetchOptions.predicate = NSPredicate(format: "title = %@", "Continuum")
+    let assetfetchResults = PHAssetCollection.fetchAssetCollections(with: .album, subtype: PHAssetCollectionSubtype.any, options: fetchOptions)
+    return assetfetchResults.firstObject
+  }
+  
+  func addPhotoToContiuumAlbum() {
+    guard let photo = photo else { return }
+    if let contiuumCollection = self.fetchContinuumAlbum() {
+      self.insert(photo: photo, in: contiuumCollection)
+    } else {
+      self.createContinuumAlbum(completion: { (success) in
+        guard success, let album = self.fetchContinuumAlbum() else { return }
+        self.insert(photo: photo, in: album)
+      })
+    }
+  }
 }

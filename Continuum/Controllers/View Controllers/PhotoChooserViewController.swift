@@ -123,6 +123,9 @@ extension PhotoChooserViewController: UIImagePickerControllerDelegate, UINavigat
     }
     
     func imagePickerControllerDidCancel(_ picker: UIImagePickerController) {
+        // Dismiss the image picker view
+        picker.dismiss(animated: true)
+        
         // Reset the button's UI
         resetButton()
     }
