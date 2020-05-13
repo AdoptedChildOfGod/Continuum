@@ -62,10 +62,10 @@ extension Post: SearchableRecord {
     
     func search(for searchterm: String) -> Bool {
         // Search in the caption
-        if caption.contains(searchterm) { return true }
+        if caption.lowercased().contains(searchterm.lowercased()) { return true }
         
         // Search in the comments
-        if comments.filter({ $0.text.contains(searchterm) }).count > 0 { return true}
+        if comments.filter({ $0.text.lowercased().contains(searchterm.lowercased()) }).count > 0 { return true}
         
         return false
     }

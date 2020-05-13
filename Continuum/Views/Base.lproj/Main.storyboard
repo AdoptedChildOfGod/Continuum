@@ -35,44 +35,30 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" white="0.33333333333333331" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <sections>
-                            <tableViewSection headerTitle="Select Image" id="hfP-uG-W5a">
+                            <tableViewSection headerTitle="Choose Photo" id="Dti-er-LpL">
                                 <cells>
-                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" rowHeight="414" id="Hdt-AF-iBI">
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" rowHeight="414" id="QoW-tQ-xze">
                                         <rect key="frame" x="0.0" y="28" width="414" height="414"/>
                                         <autoresizingMask key="autoresizingMask"/>
-                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="Hdt-AF-iBI" id="xc5-Yh-zvT">
+                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="QoW-tQ-xze" id="3b1-ve-LeZ">
                                             <rect key="frame" x="0.0" y="0.0" width="414" height="414"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
-                                                <button opaque="NO" alpha="0.5" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="XMO-Go-Ubo">
-                                                    <rect key="frame" x="12.5" y="6" width="107" height="107"/>
-                                                    <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                                    <constraints>
-                                                        <constraint firstAttribute="width" secondItem="XMO-Go-Ubo" secondAttribute="height" multiplier="1:1" id="YwY-PC-6n6"/>
-                                                    </constraints>
-                                                    <fontDescription key="fontDescription" type="system" weight="semibold" pointSize="16"/>
-                                                    <state key="normal" title="Choose Photo"/>
+                                                <containerView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="ArE-7U-BZN">
+                                                    <rect key="frame" x="0.0" y="0.0" width="414" height="414"/>
                                                     <connections>
-                                                        <action selector="choosePhotoButtonTapped:" destination="5hL-dB-9oa" eventType="touchUpInside" id="XFI-Fd-C2p"/>
+                                                        <segue destination="yPz-08-uBR" kind="embed" identifier="embeddedPhotoChooser" id="56d-69-U1v"/>
                                                     </connections>
-                                                </button>
-                                                <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="bfE-Qs-ho5">
-                                                    <rect key="frame" x="6.5" y="6" width="119" height="107"/>
-                                                </imageView>
+                                                </containerView>
                                             </subviews>
                                             <constraints>
-                                                <constraint firstItem="XMO-Go-Ubo" firstAttribute="centerY" secondItem="xc5-Yh-zvT" secondAttribute="centerY" id="7Jf-ZH-yPS"/>
-                                                <constraint firstItem="bfE-Qs-ho5" firstAttribute="height" secondItem="xc5-Yh-zvT" secondAttribute="height" multiplier="0.9" id="HJk-bA-Pww"/>
-                                                <constraint firstItem="XMO-Go-Ubo" firstAttribute="height" secondItem="xc5-Yh-zvT" secondAttribute="height" multiplier="0.9" id="PtS-dH-eER"/>
-                                                <constraint firstItem="bfE-Qs-ho5" firstAttribute="width" secondItem="xc5-Yh-zvT" secondAttribute="height" multiplier="1:1" id="UBA-Ge-OQD"/>
-                                                <constraint firstItem="bfE-Qs-ho5" firstAttribute="width" secondItem="xc5-Yh-zvT" secondAttribute="width" multiplier="0.9" id="XIO-qs-GS7"/>
-                                                <constraint firstItem="bfE-Qs-ho5" firstAttribute="centerX" secondItem="xc5-Yh-zvT" secondAttribute="centerX" id="XQq-Zb-NNR"/>
-                                                <constraint firstItem="XMO-Go-Ubo" firstAttribute="width" secondItem="xc5-Yh-zvT" secondAttribute="width" multiplier="0.9" id="YY0-qm-Wql"/>
-                                                <constraint firstItem="XMO-Go-Ubo" firstAttribute="centerX" secondItem="xc5-Yh-zvT" secondAttribute="centerX" id="tpm-uE-amL"/>
-                                                <constraint firstItem="bfE-Qs-ho5" firstAttribute="centerY" secondItem="xc5-Yh-zvT" secondAttribute="centerY" id="xaJ-GF-fnO"/>
+                                                <constraint firstItem="ArE-7U-BZN" firstAttribute="height" secondItem="3b1-ve-LeZ" secondAttribute="height" id="8sS-6l-cpb"/>
+                                                <constraint firstItem="ArE-7U-BZN" firstAttribute="centerX" secondItem="3b1-ve-LeZ" secondAttribute="centerX" id="VNY-iZ-KGi"/>
+                                                <constraint firstItem="ArE-7U-BZN" firstAttribute="centerY" secondItem="3b1-ve-LeZ" secondAttribute="centerY" id="cTi-tH-UEY"/>
+                                                <constraint firstItem="ArE-7U-BZN" firstAttribute="width" secondItem="3b1-ve-LeZ" secondAttribute="width" id="mzB-kV-sOV"/>
                                             </constraints>
                                         </tableViewCellContentView>
-                                        <color key="backgroundColor" white="0.66666666666666663" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                        <color key="backgroundColor" white="0.66666666669999997" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                     </tableViewCell>
                                 </cells>
                             </tableViewSection>
@@ -148,7 +134,6 @@
                     <connections>
                         <outlet property="choosePhotoButton" destination="XMO-Go-Ubo" id="1Qe-Aa-1Ie"/>
                         <outlet property="postCaptionTextField" destination="FQZ-x2-BQR" id="O7Q-FK-HPa"/>
-                        <outlet property="postPhotoImageView" destination="bfE-Qs-ho5" id="Khx-Lk-Eqn"/>
                     </connections>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="mhB-Fz-obr" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
@@ -403,6 +388,47 @@
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dQ9-HZ-saS" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="124.6376811594203" y="151.33928571428569"/>
+        </scene>
+        <!--Photo Chooser View Controller-->
+        <scene sceneID="80L-CT-VSK">
+            <objects>
+                <viewController id="yPz-08-uBR" customClass="PhotoChooserViewController" customModule="Continuum" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="j6G-6Z-1fF">
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="414"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <button opaque="NO" alpha="0.5" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="XMO-Go-Ubo">
+                                <rect key="frame" x="20.5" y="20.5" width="373" height="373"/>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <fontDescription key="fontDescription" type="system" weight="semibold" pointSize="16"/>
+                                <state key="normal" title="Choose Photo"/>
+                                <connections>
+                                    <action selector="choosePhotoButtonTapped:" destination="yPz-08-uBR" eventType="touchUpInside" id="4TV-rM-mnz"/>
+                                </connections>
+                            </button>
+                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="bfE-Qs-ho5">
+                                <rect key="frame" x="20.5" y="20.5" width="373" height="373"/>
+                            </imageView>
+                        </subviews>
+                        <constraints>
+                            <constraint firstItem="XMO-Go-Ubo" firstAttribute="centerY" secondItem="j6G-6Z-1fF" secondAttribute="centerY" id="BiD-2C-Cjd"/>
+                            <constraint firstItem="bfE-Qs-ho5" firstAttribute="height" secondItem="XMO-Go-Ubo" secondAttribute="height" id="Ctd-XX-JlI"/>
+                            <constraint firstItem="bfE-Qs-ho5" firstAttribute="width" secondItem="XMO-Go-Ubo" secondAttribute="width" id="FvY-SK-DTU"/>
+                            <constraint firstItem="bfE-Qs-ho5" firstAttribute="centerX" secondItem="XMO-Go-Ubo" secondAttribute="centerX" id="I1r-7O-lrx"/>
+                            <constraint firstItem="XMO-Go-Ubo" firstAttribute="centerX" secondItem="j6G-6Z-1fF" secondAttribute="centerX" id="gGP-JZ-Pyc"/>
+                            <constraint firstItem="XMO-Go-Ubo" firstAttribute="height" secondItem="j6G-6Z-1fF" secondAttribute="height" multiplier="0.9" id="i4J-nH-d4c"/>
+                            <constraint firstItem="bfE-Qs-ho5" firstAttribute="centerY" secondItem="XMO-Go-Ubo" secondAttribute="centerY" id="k5N-YZ-ZY3"/>
+                            <constraint firstItem="XMO-Go-Ubo" firstAttribute="width" secondItem="j6G-6Z-1fF" secondAttribute="width" multiplier="0.9" id="orl-YI-fNr"/>
+                        </constraints>
+                    </view>
+                    <connections>
+                        <outlet property="choosePhotoButton" destination="XMO-Go-Ubo" id="th9-sJ-nAK"/>
+                        <outlet property="postPhotoImageView" destination="bfE-Qs-ho5" id="fEr-on-Acq"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="xVb-el-xvG" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="1823" y="66"/>
         </scene>
     </scenes>
 </document>

@@ -42,6 +42,13 @@ class PostDetailTableViewController: UITableViewController {
     }
     
     @IBAction func shareButtonTapped(_ sender: UIButton) {
+        // Make sure the post exists
+        guard let post = post, let photo = post.photo else { return }
+        
+        // Create the activity controller
+        let activityController = UIActivityViewController(activityItems: [photo, post.caption], applicationActivities: nil)
+        
+        present(activityController, animated: true)
     }
     
     @IBAction func followPostButtonTapped(_ sender: UIButton) {
