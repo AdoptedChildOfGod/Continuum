@@ -26,9 +26,17 @@ class NewPostTableViewController: UITableViewController {
         super.viewDidDisappear(true)
         
         // Reset the photo choosing button, the caption, and the photo
-        choosePhotoButton.setTitle("Choose Photo", for: .normal)
         postCaptionTextField.text = nil
         postPhotoImageView.image = nil
+        resetButton()
+    }
+    
+    // MARK: - UI Helper Method
+    
+    func resetButton() {
+        if postPhotoImageView.image == nil {
+            choosePhotoButton.setTitle("Choose Photo", for: .normal)
+        }
     }
     
     // MARK: - Actions
@@ -43,18 +51,21 @@ class NewPostTableViewController: UITableViewController {
         // Hide the text of the button
         choosePhotoButton.setTitle(nil, for: .normal)
         
-        // TODO: - Dummy data for now
-        postPhotoImageView.image = #imageLiteral(resourceName: "spaceEmptyState")
+        // Present an alert to allow the user to select an image from the photo library or the camera
+        presentImagePickerAlert()
+        
+        //        // TODO: - Dummy data for now
+        //        postPhotoImageView.image = #imageLiteral(resourceName: "spaceEmptyState")
     }
     
     @IBAction func addPostButtonTapped(_ sender: UIButton) {
         // Make sure there's a caption and an image
         guard let caption = postCaptionTextField.text, !caption.isEmpty else {
-            presentErrorAlert(for: "Caption")
+            presentErrorAlert(for: "Caption is Blank", message: "Caption cannot be left blank - please enter a caption")
             return
         }
         guard let photo = postPhotoImageView.image else {
-            presentErrorAlert(for: "Image")
+            presentErrorAlert(for: "No Photo Selected", message: "Photo cannot be left blank - please select a photo")
             return
         }
         
@@ -73,18 +84,81 @@ class NewPostTableViewController: UITableViewController {
     }
 }
 
-// MARK: - Alert Controller
+// MARK: - Alert Controllers
 
 extension NewPostTableViewController {
     
-    func presentErrorAlert(for error: String) {
+    func presentErrorAlert(for error: String, message: String) {
         // Create the alert
-        let alert = UIAlertController(title: "\(error) Blank", message: "Uh oh! \(error) cannot be left blank!", preferredStyle: .alert)
+        let alert = UIAlertController(title: "\(error)", message: "\(message)", preferredStyle: .alert)
         
         // Add the dismiss button
         alert.addAction(UIAlertAction(title: "Dismiss", style: .default))
         
         // Present the alert
         present(alert, animated: true)
+    }
+    
+    func presentImagePickerAlert() {
+        // Create the alert
+        let alert = UIAlertController(title: "Choose a photo", message: nil, preferredStyle: .actionSheet)
+        
+        // Create the button for the photo library if that functionality is enabled
+        if (UIImagePickerController.isSourceTypeAvailable(UIImagePickerController.SourceType.photoLibrary)) {
+            let libraryAction = UIAlertAction(title: "Select from photo library", style: .default) { [weak self] (_) in
+                // Create the image picker, assign its delegate, and present it
+                let imagePickerController = UIImagePickerController()
+                imagePickerController.delegate = self
+                self?.present(imagePickerController, animated: true)
+            }
+            
+            alert.addAction(libraryAction)
+        }
+        
+        // Create the button for the camera if that functionality is enabled
+        if (UIImagePickerController.isSourceTypeAvailable(UIImagePickerController.SourceType.camera)) {
+            let cameraAction = UIAlertAction(title: "Take photo with camera", style: .default) { [weak self] (_) in
+                // Create the image picker, assign its delegate, and present it
+                let imagePickerController = UIImagePickerController()
+                imagePickerController.sourceType = UIImagePickerController.SourceType.camera
+                imagePickerController.delegate = self
+                self?.present(imagePickerController, animated: true)
+            }
+            
+            alert.addAction(cameraAction)
+        }
+        
+        // Create the dismiss button
+        let dismissAction = UIAlertAction(title: "Dismiss", style: .cancel) {
+            [weak self] (_) in
+            // Reset the button's UI
+            self?.resetButton()
+        }
+        alert.addAction(dismissAction)
+        
+        // Present the alert
+        present(alert, animated: true)
+    }
+}
+
+// MARK: - Image Picker Delegate
+
+extension NewPostTableViewController: UIImagePickerControllerDelegate, UINavigationControllerDelegate {
+    
+    func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
+        
+        // Get the photo
+        guard let photo = info[UIImagePickerController.InfoKey.originalImage] as? UIImage else { return }
+        
+        // Place the photo in the image view
+        postPhotoImageView.image = photo
+        
+        // Dismiss the image picker view
+        picker.dismiss(animated: true)
+    }
+    
+    func imagePickerControllerDidCancel(_ picker: UIImagePickerController) {
+        // Reset the button's UI
+        resetButton()
     }
 }

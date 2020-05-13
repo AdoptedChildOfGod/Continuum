@@ -14,10 +14,10 @@ import UIKit.UIImage
 
 struct PostStrings {
     static let recordTypeKey = "Post"
-    static let captionKey = "caption"
-    static let commentsKey = "comments"
-    static let timestampKey = "timestamp"
-    static let photoDataKey = "photoData"
+    fileprivate static let captionKey = "caption"
+    fileprivate static let commentsKey = "comments"
+    fileprivate static let timestampKey = "timestamp"
+    fileprivate static let photoDataKey = "photoData"
 }
 
 // MARK: - Searchable Protocol

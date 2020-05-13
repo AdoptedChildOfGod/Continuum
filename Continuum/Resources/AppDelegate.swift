@@ -19,6 +19,10 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         // Use this to suppress warnings about autolayout constraints and make debugging console easier to read
         UserDefaults.standard.set(false, forKey: "_UIConstraintBasedLayoutLogUnsatisfiable")
         
+        // Request permissions to send notificatinos
+        
+        // Request access to the camera and photo library
+        
         
         // Override point for customization after application launch.
         return true

@@ -13,9 +13,9 @@ import CloudKit
 
 struct CommentStrings {
     static let recordTypeKey = "Comment"
-    static let textKey = "text"
-    static let postKey = "post"
-    static let timestampKey = "timestamp"
+    fileprivate static let textKey = "text"
+    fileprivate static let postKey = "post"
+    fileprivate static let timestampKey = "timestamp"
 }
 
 // MARK: - Comment

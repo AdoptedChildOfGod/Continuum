@@ -98,11 +98,17 @@ extension PostListTableViewController: UISearchBarDelegate {
     }
     
     func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
-        // Search for the search term
-        filteredPosts = PostController.shared.posts.filter { $0.search(for: searchText) }
+        if searchText == "" {
+            filteredPosts = PostController.shared.posts
+            isSearching = false
+        } else {
+            // Search for the search term
+            filteredPosts = PostController.shared.posts.filter { $0.search(for: searchText) }
+            
+            // Update the UI
+            tableView.reloadData()
+        }
         
-        // Update the UI
-        tableView.reloadData()
     }
     
     func searchBarCancelButtonClicked(_ searchBar: UISearchBar) {
