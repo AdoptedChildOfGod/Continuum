@@ -33,6 +33,7 @@ class PostDetailTableViewController: UITableViewController {
         guard let post = post, let photo = post.photo else { return }
         
         postPhotoImageView.image = photo
+        postPhotoImageView.layer.cornerRadius = 30
         
         // Fetch the comments for that post
         PostController.shared.fetchComments(for: post) { [weak self] (result) in

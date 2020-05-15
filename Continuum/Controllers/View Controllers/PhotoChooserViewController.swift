@@ -30,7 +30,8 @@ class PhotoChooserViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        // Do any additional setup after loading the view.
+        postPhotoImageView.layer.cornerRadius = 30
+        postPhotoImageView.clipsToBounds = true
     }
     
     override func viewDidDisappear(_ animated: Bool) {

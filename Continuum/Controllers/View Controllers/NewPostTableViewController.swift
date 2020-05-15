@@ -15,6 +15,7 @@ class NewPostTableViewController: UITableViewController {
     
     @IBOutlet weak var postCaptionTextField: UITextField!
     @IBOutlet weak var choosePhotoButton: UIButton!
+    @IBOutlet weak var photoContainerView: UIView!
     
     // MARK: - Properties
     
@@ -24,6 +25,9 @@ class NewPostTableViewController: UITableViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        photoContainerView.layer.cornerRadius = 30
+        photoContainerView.clipsToBounds = true
     }
     
     override func viewDidDisappear(_ animated: Bool) {

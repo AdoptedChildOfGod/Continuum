@@ -15,6 +15,7 @@ class PostTableViewCell: UITableViewCell {
     @IBOutlet weak var postCaptionLabel: UILabel!
     @IBOutlet weak var postCommentsLabel: UILabel!
     @IBOutlet weak var postPhotoImageView: UIImageView!
+    @IBOutlet weak var cellBorderView: UIView!
     
     // MARK: - Properties
     
@@ -28,5 +29,13 @@ class PostTableViewCell: UITableViewCell {
         postCaptionLabel.text = post.caption
         postCommentsLabel.text = "Comments: \(post.commentCount)"
         if let photo = post.photo { postPhotoImageView.image = photo }
+        
+        cellBorderView.layer.cornerRadius = 20
+        cellBorderView.clipsToBounds = true
+        postPhotoImageView.layer.cornerRadius = 30
+        postCaptionLabel.layer.cornerRadius = 10
+        postCaptionLabel.clipsToBounds = true
+        postCommentsLabel.layer.cornerRadius = 10
+        postCommentsLabel.clipsToBounds = true
     }
 }
