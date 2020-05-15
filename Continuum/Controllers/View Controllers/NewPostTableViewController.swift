@@ -58,7 +58,6 @@ class NewPostTableViewController: UITableViewController {
             case .success(_):
                 // Save the photo to a custom album in the user's photo library
                 self?.addPhotoToContiuumAlbum()
-                print("Successfully created new post")
             case .failure(let error):
                 print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")
             }
@@ -77,22 +76,6 @@ class NewPostTableViewController: UITableViewController {
             // Claim the role of delegate for the embedded view
             embeddedVC.delegate = self
         }
-    }
-}
-
-// MARK: - Alert Controllers
-
-extension NewPostTableViewController {
-    
-    func presentErrorAlert(for error: String, message: String) {
-        // Create the alert
-        let alert = UIAlertController(title: "\(error)", message: "\(message)", preferredStyle: .alert)
-        
-        // Add the dismiss button
-        alert.addAction(UIAlertAction(title: "Dismiss", style: .default))
-        
-        // Present the alert
-        present(alert, animated: true)
     }
 }
 

@@ -13,27 +13,32 @@ import CloudKit
 
 struct CommentStrings {
     static let recordTypeKey = "Comment"
-    fileprivate static let textKey = "text"
-    fileprivate static let postKey = "post"
-    fileprivate static let timestampKey = "timestamp"
+    static let textKey = "text"
+    static let timestampKey = "timestamp"
+    static let postReferenceKey = "post"
 }
 
 // MARK: - Comment
 
 class Comment {
-    
-    // Properties
-    
+    // Comment Properties
     let text: String
     weak var post: Post?
     let timestamp: Date
     
-    // Initializer
+    // CloudKit Properties
+    var postReference: CKRecord.Reference? {
+        guard let post = post else { return nil }
+        return CKRecord.Reference(recordID: post.recordID, action: .none)
+    }
+    let recordID: CKRecord.ID
     
-    init(text: String, post: Post, timestamp: Date = Date()) {
+    // Initializer
+    init(text: String, post: Post, timestamp: Date = Date(), recordID: CKRecord.ID = CKRecord.ID(recordName: UUID().uuidString)) {
         self.text = text
         self.post = post
         self.timestamp = timestamp
+        self.recordID = recordID
     }
 }
 
@@ -51,13 +56,13 @@ class Comment {
 
 extension Comment {
     
-    convenience init?(ckRecord: CKRecord) {
+    convenience init?(ckRecord: CKRecord, post: Post) {
         guard let text = ckRecord[CommentStrings.textKey] as? String,
-            let post = ckRecord[CommentStrings.postKey] as? Post,
+//            let postReference = ckRecord[CommentStrings.postReferenceKey] as? CKRecord.Reference,
             let timestamp = ckRecord[CommentStrings.timestampKey] as? Date
             else { return nil }
         
-        self.init(text: text, post: post, timestamp: timestamp)
+        self.init(text: text, post: post, timestamp: timestamp, recordID: ckRecord.recordID)
     }
 }
 
@@ -66,11 +71,11 @@ extension Comment {
 extension CKRecord {
     
     convenience init(comment: Comment) {
-        self.init(recordType: CommentStrings.recordTypeKey)
+        self.init(recordType: CommentStrings.recordTypeKey, recordID: comment.recordID)
         
         setValuesForKeys([
             CommentStrings.textKey : comment.text,
-            CommentStrings.postKey : comment.post,
+            CommentStrings.postReferenceKey : comment.postReference,
             CommentStrings.timestampKey : comment.timestamp
         ])
     }

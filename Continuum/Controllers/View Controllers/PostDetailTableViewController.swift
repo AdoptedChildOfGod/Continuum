@@ -13,6 +13,7 @@ class PostDetailTableViewController: UITableViewController {
     // MARK: - Outlets
     
     @IBOutlet weak var postPhotoImageView: UIImageView!
+    @IBOutlet weak var followPostButton: UIButton!
     
     // MARK: - Properties
     
@@ -32,7 +33,26 @@ class PostDetailTableViewController: UITableViewController {
         guard let post = post, let photo = post.photo else { return }
         
         postPhotoImageView.image = photo
-        tableView.reloadData()
+        
+        // Fetch the comments for that post
+        PostController.shared.fetchComments(for: post) { [weak self] (result) in
+            switch result {
+            case .success(_):
+                DispatchQueue.main.async {
+                    self?.tableView.reloadData()
+                }
+            case .failure(let error):
+                print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")
+            }
+        }
+        
+        // Check to see if the post is being followed or not
+        PostController.shared.checkSubscriptionToComments(for: post) { [weak self] (isFollowed, _) in
+            // Set the button's title based on whether or not the post is being followed
+            DispatchQueue.main.async {
+                self?.followPostButton.setTitle(isFollowed ? "Unfollow Post" : "Follow Post", for: .normal)
+            }
+        }
     }
     
     // MARK: - Actions
@@ -43,15 +63,29 @@ class PostDetailTableViewController: UITableViewController {
     
     @IBAction func shareButtonTapped(_ sender: UIButton) {
         // Make sure the post exists
-        guard let post = post, let photo = post.photo else { return }
+        guard let caption = post?.caption, let photo = post?.photo else { return }
         
         // Create the activity controller
-        let activityController = UIActivityViewController(activityItems: [photo, post.caption], applicationActivities: nil)
+        let activityController = UIActivityViewController(activityItems: [photo, caption], applicationActivities: nil)
         
         present(activityController, animated: true)
     }
     
     @IBAction func followPostButtonTapped(_ sender: UIButton) {
+        guard let post = post else { return }
+        
+        PostController.shared.toggleSubscriptionToComments(for: post) { [weak self] (subscribed, error) in
+            // Handle any errors
+            if let error = error { print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)") }
+                
+                // Set the button's title based on whether or not the post is being followed
+            else {
+                DispatchQueue.main.async {
+                    self?.followPostButton.setTitle(subscribed ? "Unfollow Post" : "Follow Post", for: .normal)
+                    
+                }
+            }
+        }
     }
     
     // MARK: - Table view data source

@@ -4,6 +4,7 @@
     <dependencies>
         <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="16087"/>
+        <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
@@ -203,7 +204,7 @@
                                             </constraints>
                                         </view>
                                     </subviews>
-                                    <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                    <color key="backgroundColor" white="0.33333333333333331" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                     <constraints>
                                         <constraint firstItem="Gr1-oG-4bj" firstAttribute="centerY" secondItem="ate-iA-uKY" secondAttribute="centerY" id="1yC-AV-7L0"/>
                                         <constraint firstAttribute="bottom" secondItem="Gr1-oG-4bj" secondAttribute="bottom" constant="3" id="Cic-Hh-MV4"/>
@@ -332,12 +333,13 @@
                     </tableView>
                     <navigationItem key="navigationItem" title="View Post" id="vsW-Ky-ceR"/>
                     <connections>
+                        <outlet property="followPostButton" destination="F5b-Nh-Qxv" id="TjV-j6-3gZ"/>
                         <outlet property="postPhotoImageView" destination="UnZ-Mo-DOi" id="iaI-wy-Fpn"/>
                     </connections>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="JoJ-RO-MvK" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1937.68115942029" y="-546.42857142857144"/>
+            <point key="canvasLocation" x="1938" y="-546"/>
         </scene>
         <!--All Posts-->
         <scene sceneID="idT-uS-6hS">
@@ -387,7 +389,7 @@
                 </navigationController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dQ9-HZ-saS" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="124.6376811594203" y="151.33928571428569"/>
+            <point key="canvasLocation" x="125" y="151"/>
         </scene>
         <!--Photo Chooser View Controller-->
         <scene sceneID="80L-CT-VSK">
@@ -420,6 +422,7 @@
                             <constraint firstItem="bfE-Qs-ho5" firstAttribute="centerY" secondItem="XMO-Go-Ubo" secondAttribute="centerY" id="k5N-YZ-ZY3"/>
                             <constraint firstItem="XMO-Go-Ubo" firstAttribute="width" secondItem="j6G-6Z-1fF" secondAttribute="width" multiplier="0.9" id="orl-YI-fNr"/>
                         </constraints>
+                        <viewLayoutGuide key="safeArea" id="lVC-a7-wU6"/>
                     </view>
                     <connections>
                         <outlet property="choosePhotoButton" destination="XMO-Go-Ubo" id="th9-sJ-nAK"/>

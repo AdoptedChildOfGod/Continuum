@@ -69,10 +69,11 @@ extension PhotoChooserViewController {
         let alert = UIAlertController(title: "Choose a photo", message: nil, preferredStyle: .actionSheet)
         
         // Create the button for the photo library if that functionality is enabled
-        if (UIImagePickerController.isSourceTypeAvailable(UIImagePickerController.SourceType.photoLibrary)) {
+        if (UIImagePickerController.isSourceTypeAvailable(.photoLibrary)) {
             let libraryAction = UIAlertAction(title: "Select from photo library", style: .default) { [weak self] (_) in
                 // Create the image picker, assign its delegate, and present it
                 let imagePickerController = UIImagePickerController()
+                imagePickerController.allowsEditing = false
                 imagePickerController.delegate = self
                 self?.present(imagePickerController, animated: true)
             }
@@ -81,11 +82,12 @@ extension PhotoChooserViewController {
         }
         
         // Create the button for the camera if that functionality is enabled
-        if (UIImagePickerController.isSourceTypeAvailable(UIImagePickerController.SourceType.camera)) {
+        if (UIImagePickerController.isSourceTypeAvailable(.camera)) {
             let cameraAction = UIAlertAction(title: "Take photo with camera", style: .default) { [weak self] (_) in
                 // Create the image picker, assign its delegate, and present it
                 let imagePickerController = UIImagePickerController()
-                imagePickerController.sourceType = UIImagePickerController.SourceType.camera
+                imagePickerController.sourceType = .camera
+                imagePickerController.allowsEditing = false
                 imagePickerController.delegate = self
                 self?.present(imagePickerController, animated: true)
             }
@@ -110,7 +112,7 @@ extension PhotoChooserViewController: UIImagePickerControllerDelegate, UINavigat
     func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
         
         // Get the photo
-        guard let photo = info[UIImagePickerController.InfoKey.originalImage] as? UIImage else { return }
+        guard let photo = info[.originalImage] as? UIImage else { return }
         
         // Place the photo in the image view
         postPhotoImageView.image = photo

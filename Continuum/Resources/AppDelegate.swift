@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import CloudKit
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
@@ -16,16 +17,48 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         
-        // Use this to suppress warnings about autolayout constraints and make debugging console easier to read
+        // Use this to suppress warnings about auto layout constraints and make debugging console easier to read
         UserDefaults.standard.set(false, forKey: "_UIConstraintBasedLayoutLogUnsatisfiable")
         
-        // Request permissions to send notificatinos
+        // Check to see if the user is signed in to their iCloud Account
+        checkAccountStatus { [weak self] (accountAvailable) in
+            // Present an error alert if the account is not available
+            if !accountAvailable {
+                DispatchQueue.main.async {
+                    self?.window?.rootViewController?.presentErrorAlert(for: "Error: Account Not Available", message: "Please make sure you are signed in to your iCloud account on this device and try again.")
+                }
+            }
+        }
         
-        // Request access to the camera and photo library
+        // Request permissions to send notifications
+        UNUserNotificationCenter.current().requestAuthorization(options: [.alert, .badge, .sound]) { (userDidAllow, error) in
+                   if let error = error { print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)") }
+                   
+                   if userDidAllow {
+                       DispatchQueue.main.async {
+                           UIApplication.shared.registerForRemoteNotifications()
+                       }
+                   }
+               }
         
-        
-        // Override point for customization after application launch.
         return true
+    }
+    
+    func checkAccountStatus(completion: @escaping (Bool) -> Void) {
+        CKContainer.default().accountStatus { (accountStatus, error) in
+            // Handle any errors
+            if let error = error {
+                print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")
+                return completion(false) }
+            
+            // Deal with the account status
+            switch accountStatus {
+            case .available:
+                return completion(true)
+            default:
+                return completion(false)
+            }
+        }
     }
     
     func applicationWillResignActive(_ application: UIApplication) {

@@ -28,12 +28,29 @@ class PostListTableViewController: UITableViewController {
         super.viewDidLoad()
 
         postSearchBar.delegate = self
+        
+        syncData()
     }
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(true)
         filteredPosts = PostController.shared.posts
         tableView.reloadData()
+    }
+    
+    // MARK: - Helper Methods
+    
+    func syncData() {
+        PostController.shared.fetchPosts { [weak self] (result) in
+            switch result {
+            case .success(_):
+                DispatchQueue.main.async {
+                    self?.tableView.reloadData()
+                }
+            case .failure(let error):
+                print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")
+            }
+        }
     }
 
     // MARK: - Table view data source
