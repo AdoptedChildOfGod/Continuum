@@ -28,7 +28,7 @@ class PostController {
     
     init() {
         // Automatically subscribe users to receive notifications for new posts
-        subscribeToNewPosts()
+        subscribeToNewPosts(completion: nil)
     }
     
     // MARK: - CRUD Methods
@@ -50,6 +50,7 @@ class PostController {
             
             // Save to the source of truth
             self?.posts.insert(post, at: 0)
+            print("new posted added")
             return completion(.success(post))
         }
     }
@@ -110,7 +111,8 @@ class PostController {
     // Update a post with a new comment
     func add(comment text: String, to post: Post, completion: @escaping (Result<Comment, PostError>) -> Void) {
         // Create the comment as a CKRecord
-        let commentRecord = CKRecord(comment: Comment(text: text, post: post))
+        let postReference = CKRecord.Reference(recordID: post.recordID, action: .none)
+        let commentRecord = CKRecord(comment: Comment(text: text, postReference: postReference))
         
         // Save the data to the cloud
         publicDB.save(commentRecord) { [weak self] (record, error) in
@@ -162,7 +164,7 @@ class PostController {
     // MARK: - Notifications
     
     // Subscribe to notifications for all new posts
-    func subscribeToNewPosts(completion: ((Bool, Error?) -> Void)? = nil) {
+    func subscribeToNewPosts(completion: ((Bool, Error?) -> Void)?) {
         // Set up the subscription to be alerted of all new posts
         let subscription = CKQuerySubscription(recordType: PostStrings.recordTypeKey, predicate: NSPredicate(value: true), options: [.firesOnRecordCreation])
         
@@ -175,14 +177,14 @@ class PostController {
         
         // Save the subscription if it hasn't already been saved
         publicDB.save(subscription) { (_, error) in
-            guard let completion = completion else { return }
-            if let error = error { return completion(false, error) }
-            return completion(true, nil)
+            if let error = error { completion?(false, error) ; return }
+            completion?(true, nil)
+            return
         }
     }
     
     // Subscribe to notifications for comments on a post
-    func addSubscriptionToComments(for post: Post, completion: ((Bool, Error?) -> Void)? = nil) {
+    func addSubscriptionToComments(for post: Post, completion: ((Bool, Error?) -> Void)?) {
         // Set up the subscription to be alerted to comments for the particular post
         let predicateForPost = NSPredicate(format: "%K == %@", argumentArray: [CommentStrings.postReferenceKey, post.recordID])
         let subscription = CKQuerySubscription(recordType: CommentStrings.recordTypeKey, predicate: predicateForPost, subscriptionID: post.recordID.recordName, options: CKQuerySubscription.Options.firesOnRecordCreation)
@@ -191,8 +193,8 @@ class PostController {
         let notificationInfo = CKQuerySubscription.NotificationInfo()
         notificationInfo.title = "New Comment"
         notificationInfo.alertBody = "A comment was added to the post \"\(post.caption)\""
-        notificationInfo.shouldSendContentAvailable = true
-        notificationInfo.desiredKeys = [CommentStrings.textKey, CommentStrings.timestampKey]
+//        notificationInfo.shouldSendContentAvailable = true
+//        notificationInfo.desiredKeys = [CommentStrings.textKey, CommentStrings.timestampKey]
         notificationInfo.shouldBadge = true
         subscription.notificationInfo = notificationInfo
         
@@ -204,7 +206,7 @@ class PostController {
     }
     
     // Remove a subscription to notifications for comments on a post
-    func removeSubscriptionToComments(for post: Post, completion: ((Bool, Error?) -> Void)? = nil) {
+    func removeSubscriptionToComments(for post: Post, completion: ((Bool, Error?) -> Void)?) {
         // Remove the subscription from the cloud
         publicDB.delete(withSubscriptionID: post.recordID.recordName) { (_, error) in
             if let error = error { completion?(false, error) }
@@ -213,29 +215,31 @@ class PostController {
     }
     
     // Check to see if there's a subscription to notifications for comments on a post
-    func checkSubscriptionToComments(for post: Post, completion: ((Bool, Error?) -> Void)? = nil) {
+    func checkSubscriptionToComments(for post: Post, completion: ((Bool) -> Void)?) {
         publicDB.fetch(withSubscriptionID: post.recordID.recordName) { (subscription, error) in
-            if let error = error { completion?(false, error) }
-            else if subscription != nil { completion?(true, nil) }
-            else { completion?(false, nil) }
+            if let error = error { print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)") }
+            if subscription == nil { completion?(false) }
+            else { completion?(true) }
         }
     }
     
     // Toggle a subscription to notifications for comments on a post
-    func toggleSubscriptionToComments(for post: Post, completion: ((Bool, Error?) -> Void)? = nil) {
+    func toggleSubscriptionToComments(for post: Post, completion: ((Bool, Error?) -> Void)?) {
         // Check to see if a subscription already exists
-        checkSubscriptionToComments(for: post) { [weak self] (subscriptionExists, error) in
+        checkSubscriptionToComments(for: post) { [weak self] (subscriptionExist) in
             // If the subscription already exists, remove it
-            if subscriptionExists {
+            if subscriptionExist {
                 self?.removeSubscriptionToComments(for: post, completion: { (success, error) in
-                    if success { completion?(false, nil) }
+                    if let error = error { print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)") }
+                    if success { print("removed correctly") ; completion?(false, nil) }
                     else { completion?(true, nil) }
                 })
             }
                 // Otherwise, add the new subscription
             else {
                 self?.addSubscriptionToComments(for: post, completion: { (success, error) in
-                    if success { completion?(true, nil) }
+                    if let error = error { print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)") }
+                    if success { print("added correctly"); completion?(true, nil) }
                     else { completion?(false, nil) }
                 })
             }

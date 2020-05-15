@@ -23,34 +23,20 @@ struct CommentStrings {
 class Comment {
     // Comment Properties
     let text: String
-    weak var post: Post?
     let timestamp: Date
     
     // CloudKit Properties
-    var postReference: CKRecord.Reference? {
-        guard let post = post else { return nil }
-        return CKRecord.Reference(recordID: post.recordID, action: .none)
-    }
+    var postReference: CKRecord.Reference?
     let recordID: CKRecord.ID
     
     // Initializer
-    init(text: String, post: Post, timestamp: Date = Date(), recordID: CKRecord.ID = CKRecord.ID(recordName: UUID().uuidString)) {
+    init(text: String,timestamp: Date = Date(), recordID: CKRecord.ID = CKRecord.ID(recordName: UUID().uuidString), postReference: CKRecord.Reference?) {
         self.text = text
-        self.post = post
         self.timestamp = timestamp
         self.recordID = recordID
+        self.postReference = postReference
     }
 }
-
-// MARK: - Equatable
-
-//extension Comment: Equatable {
-//
-//    static func == (lhs: Comment, rhs: Comment) -> Bool {
-//        return
-//    }
-//
-//}
 
 // MARK: - Convert from CKRecord
 
@@ -58,11 +44,11 @@ extension Comment {
     
     convenience init?(ckRecord: CKRecord, post: Post) {
         guard let text = ckRecord[CommentStrings.textKey] as? String,
-//            let postReference = ckRecord[CommentStrings.postReferenceKey] as? CKRecord.Reference,
             let timestamp = ckRecord[CommentStrings.timestampKey] as? Date
             else { return nil }
+        let postReference = ckRecord[CommentStrings.postReferenceKey] as? CKRecord.Reference
         
-        self.init(text: text, post: post, timestamp: timestamp, recordID: ckRecord.recordID)
+        self.init(text: text, timestamp: timestamp, recordID: ckRecord.recordID, postReference: postReference)
     }
 }
 

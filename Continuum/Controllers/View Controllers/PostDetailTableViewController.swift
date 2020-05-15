@@ -48,7 +48,7 @@ class PostDetailTableViewController: UITableViewController {
         }
         
         // Check to see if the post is being followed or not
-        PostController.shared.checkSubscriptionToComments(for: post) { [weak self] (isFollowed, _) in
+        PostController.shared.checkSubscriptionToComments(for: post) { [weak self] (isFollowed) in
             // Set the button's title based on whether or not the post is being followed
             DispatchQueue.main.async {
                 self?.followPostButton.setTitle(isFollowed ? "Unfollow Post" : "Follow Post", for: .normal)
@@ -83,7 +83,6 @@ class PostDetailTableViewController: UITableViewController {
             else {
                 DispatchQueue.main.async {
                     self?.followPostButton.setTitle(subscribed ? "Unfollow Post" : "Follow Post", for: .normal)
-                    
                 }
             }
         }
